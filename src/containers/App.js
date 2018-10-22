@@ -4,6 +4,8 @@ import queryString from 'query-string';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+import PlaylistListInterface from '../components/PlaylistListInterface/PlaylistListInterface';
+
 import './App.less';
 
 class App extends Component {
@@ -45,6 +47,9 @@ class App extends Component {
     } else {
       this.removeCurrentToken();
     }
+
+    this.handleEditClick = this.handleEditClick.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
   componentDidMount() {
@@ -69,13 +74,27 @@ class App extends Component {
     sessionStorage.removeItem('tokenobject');
   }
 
+  handleEditClick(userId, playlistId, canEdit) {
+    this.setState({
+      showModal: true,
+      userId: userId,
+      playlistId: playlistId,
+      canEdit: canEdit,
+    });
+  }
+
+  handleCloseModal() {
+    this.setState({ showModal: false });
+    this.getUserAndPlaylist();
+  }
+
   handleLogoutClick() {
     this.removeCurrentToken();
     this.setState({ userLoggedIn: false });
   }
 
   render() {
-    const { userLoggedIn } = this.state;
+    const { userLoggedIn, user, playlists } = this.state;
     return (
       <div className="App">
         <Header />
@@ -102,6 +121,15 @@ class App extends Component {
               >
                 Logout
               </button>
+              {(playlists && user) ?
+                <PlaylistListInterface
+                  user={user}
+                  playlists={playlists}
+                  handleEditClick={this.handleEditClick}
+                />
+                :
+                <div className="loadingplaylist">Loading playlists...</div>
+              }
             </div>
           )}
         </div>
