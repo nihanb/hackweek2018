@@ -7,7 +7,7 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
-  "proxy": "https://spotify-web-playback-react.glitch.me",
+  "proxy": "http://localhost:3000/",
   "devDependencies": {
     "react-scripts": "0.9.5"
   },
