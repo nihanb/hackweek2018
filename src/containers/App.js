@@ -9,6 +9,7 @@ import * as api from '../api/api';
 import PlaylistEditInterface from '../components/PlaylistEditInterface/PlaylistEditInterface';
 import PlaylistListInterface from '../components/PlaylistListInterface/PlaylistListInterface';
 import Player from '../components/Player/Player';
+import NowPlaying from '../components/NowPlaying/NowPlaying';
 
 import './App.less';
 
@@ -17,6 +18,17 @@ class App extends Component {
     super(props);
     this.state = {
       userLoggedIn: false,
+      playerState: {
+        track_window: {
+          current_track: {
+            name: '',
+            artists: [],
+            album: {
+              images: [],
+            },
+          },
+        },
+      },
     };
 
     this.appToken = '364795ab3513446e91f04944fda2b35f';
@@ -56,6 +68,7 @@ class App extends Component {
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleSaveClick = this.handleSaveClick.bind(this);
     this.handlePlayerDeviceId = this.handlePlayerDeviceId.bind(this);
+    this.handlePlayerStateChange = this.handlePlayerStateChange.bind(this);
   }
 
   componentDidMount() {
@@ -124,12 +137,16 @@ class App extends Component {
     this.setState({ userLoggedIn: false });
   }
 
+  handlePlayerStateChange(data) {
+    this.setState({playerState: data});
+  }
+
   render() {
     const { userLoggedIn, showModal, userId, playlistId, canEdit, user, playlists } = this.state;
     return (
       <div className="App">
         <Header />
-
+        <NowPlaying playerState={this.state.playerState}/>
         <div className="container" role="main">
           {!userLoggedIn ? (
             <div className="loginbutton">
@@ -154,6 +171,7 @@ class App extends Component {
               </button>
               <Player
                 onDeviceIdReady={this.handlePlayerDeviceId}
+                onPlayerStateChange={this.handlePlayerStateChange}
                 token={this.getCurrentToken().value}
               />
               {showModal && (

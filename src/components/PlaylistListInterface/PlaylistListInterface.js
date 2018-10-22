@@ -14,7 +14,7 @@ class PlaylistListInterface extends Component {
     const { playlists, user } = this.state;
     return (
       <div>
-        <h2>Welcome {user.display_name}</h2>
+        {/* <h2>Welcome {user.display_name}</h2> */}
         <table className="table table-striped">
           <thead>
             <tr>

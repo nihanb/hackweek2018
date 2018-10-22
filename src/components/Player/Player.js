@@ -26,6 +26,7 @@ class Player extends Component {
       player.on('player_state_changed', function(data) {
         console.log('Player state changed');
         console.log(JSON.stringify(data));
+        props.onPlayerStateChange(data);
       });
 
       player.connect();
@@ -43,6 +44,7 @@ class Player extends Component {
 Player.propTypes = {
   onDeviceIdReady: PropTypes.func,
   token: PropTypes.string,
+  onPlayerStateChange: PropTypes.func,
 };
 
 
