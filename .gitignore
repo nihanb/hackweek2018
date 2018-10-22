@@ -1,0 +1,26 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+
+# testing
+coverage
+junit.xml
+
+# production
+build
+
+# misc
+.DS_Store
+.env
+npm-debug.log
+
+# emacs temporary files
+*~
+
+# IntelliJ
+.idea
+*.iml
+
+# Ignore css files as they're generated from less files
+**/*.css

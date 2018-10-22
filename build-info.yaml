@@ -1,0 +1,18 @@
+version: 2
+
+template:
+  type: webYarn
+  webYarn:
+    deployment: tugboat
+    gcpProject: abuck-spotty-world
+
+notifications:
+  slack:
+    master:
+      build:
+        onFail:
+          - $author
+    review:
+      build:
+        onFail:
+          - $author

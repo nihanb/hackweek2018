@@ -1,0 +1,31 @@
+{
+  "name": "abuck-spotty-world",
+  "version": "0.0.1",
+  "private": true,
+  "devDependencies": {
+    "concurrently": "3.4.0",
+    "eslint": "4.19.1",
+    "eslint-config-spotify": "9.0.0",
+    "eslint-plugin-mocha": "5.0.0",
+    "eslint-plugin-react": "7.8.2",
+    "jest-junit": "3.4.1",
+    "less": "2.7.2",
+    "less-watch-compiler": "1.4.2",
+    "react-scripts": "1.1.4",
+    "sp-bootstrap": "8.2.4"
+  },
+  "dependencies": {
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-bootstrap": "^0.32.1"
+  },
+  "scripts": {
+    "watch-less": "less-watch-compiler src src index.less",
+    "start-server": "react-scripts start",
+    "start": "concurrently 'npm run watch-less' 'npm run start-server' --kill-others",
+    "build": "lessc src/index.less src/index.css && react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "test:ci": "react-scripts test --env=jsdom --coverage --testResultsProcessor ./node_modules/jest-junit",
+    "eject": "react-scripts eject"
+  }
+}

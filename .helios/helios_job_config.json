@@ -1,0 +1,23 @@
+{
+  "command" : [ ],
+  "env": {},
+  "expires" : null,
+  "gracePeriod" : null,
+  "healthCheck" : {
+    "type" : "http",
+    "path" : "/",
+    "port" : "http"
+  },
+  "ports" : {
+    "http" : {
+      "externalPort" : 80,
+      "internalPort" : 80,
+      "protocol" : "tcp"
+    }
+  },
+  "registrationDomain" : "",
+  "volumes": {
+    "/etc/nginx/include:ro": "/etc/nginx/include",
+    "/etc/spotify:ro": "/etc/spotify"
+  }
+}
