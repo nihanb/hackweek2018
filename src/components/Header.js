@@ -6,7 +6,7 @@ const Header = () => (
     <Navbar.Header>
       <Navbar.Brand>
         <span className="navbar-logo">Spotify</span>
-        <span className="navbar-title">abuck-spotty-world</span>
+        <span className="navbar-title">Spotty World</span>
       </Navbar.Brand>
       <Navbar.Toggle />
     </Navbar.Header>

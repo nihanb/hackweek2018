@@ -24,3 +24,5 @@ npm-debug.log
 
 # Ignore css files as they're generated from less files
 **/*.css
+
+yarn-error.log
