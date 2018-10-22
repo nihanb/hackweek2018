@@ -13,6 +13,7 @@ class PlaylistEditInterface extends Component {
       contentLoading: true,
       playlistImage: {images: []},
       canEdit: this.props.canEdit,
+      propTypes: '',
     };
     if (!this.props.canEdit) {
       this.state.notification = 'This playlist is owned by another user. You cannot modify' +

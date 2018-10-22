@@ -8,6 +8,7 @@ import * as api from '../api/api';
 
 import PlaylistEditInterface from '../components/PlaylistEditInterface/PlaylistEditInterface';
 import PlaylistListInterface from '../components/PlaylistListInterface/PlaylistListInterface';
+import Player from '../components/Player/Player';
 
 import './App.less';
 
@@ -24,7 +25,7 @@ class App extends Component {
     );
     this.scopes = encodeURIComponent(
       'user-read-private playlist-read-private playlist-read-collaborative' +
-      ' playlist-modify-private playlist-modify-public'
+      ' playlist-modify-private playlist-modify-public streaming user-read-birthdate user-modify-playback-state'
     );
     this.loginLink = `https://accounts.spotify.com/authorize?client_id=${
       this.appToken}&redirect_uri=${this.redirectURI}&scope=${this.scopes}&response_type=token`;
@@ -54,6 +55,7 @@ class App extends Component {
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
     this.handleSaveClick = this.handleSaveClick.bind(this);
+    this.handlePlayerDeviceId = this.handlePlayerDeviceId.bind(this);
   }
 
   componentDidMount() {
@@ -88,6 +90,11 @@ class App extends Component {
         this.setState({playlists});
       });
     }
+  }
+
+  handlePlayerDeviceId(deviceId) {
+    this.setState({deviceId: deviceId});
+    api.play(deviceId, this.getCurrentToken().value);
   }
 
   removeCurrentToken() {
@@ -145,6 +152,10 @@ class App extends Component {
               >
                 Logout
               </button>
+              <Player
+                onDeviceIdReady={this.handlePlayerDeviceId}
+                token={this.getCurrentToken().value}
+              />
               {showModal && (
                 <PlaylistEditInterface
                   showModal={showModal}
