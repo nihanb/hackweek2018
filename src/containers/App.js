@@ -69,6 +69,11 @@ class App extends Component {
     sessionStorage.removeItem('tokenobject');
   }
 
+  handleLogoutClick() {
+    this.removeCurrentToken();
+    this.setState({ userLoggedIn: false });
+  }
+
   render() {
     const { userLoggedIn } = this.state;
     return (
@@ -89,7 +94,14 @@ class App extends Component {
             </div>
           ) : (
             <div className="userloggedin">
-              I am logged in!
+              <button
+                className="btn btn-primary btn-xs pull-right btnlogout"
+                onClick={() => {
+                  this.handleLogoutClick();
+                }}
+              >
+                Logout
+              </button>
             </div>
           )}
         </div>
