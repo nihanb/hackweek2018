@@ -4,6 +4,9 @@ import queryString from 'query-string';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
+import * as api from '../api/api';
+
+import PlaylistEditInterface from '../components/PlaylistEditInterface/PlaylistEditInterface';
 import PlaylistListInterface from '../components/PlaylistListInterface/PlaylistListInterface';
 
 import './App.less';
@@ -15,7 +18,7 @@ class App extends Component {
       userLoggedIn: false,
     };
 
-    this.appToken = '08257d43eac4490c9124235c27fd1793';
+    this.appToken = '364795ab3513446e91f04944fda2b35f';
     this.redirectURI = encodeURIComponent(
       `${window.location.protocol }//${ window.location.host }/callback`
     );
@@ -50,6 +53,7 @@ class App extends Component {
 
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.handleSaveClick = this.handleSaveClick.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +64,8 @@ class App extends Component {
       window.alert('You must sign in to manage your playlists.');
       return;
     }
+
+    this.getUserAndPlaylist();
   }
 
   setCurrentToken(tokenObject) {
@@ -68,6 +74,20 @@ class App extends Component {
 
   getCurrentToken() {
     return JSON.parse(sessionStorage.getItem('tokenobject'));
+  }
+
+  getUserAndPlaylist() {
+    const token = this.getCurrentToken();
+    if (token) {
+      api.getCurrentUserProfile(token.value).then((payload) => {
+        const user = payload.data;
+        this.setState({user});
+      });
+      api.getPlaylists(token.value).then((payload) => {
+        const playlists = payload.data.items;
+        this.setState({playlists});
+      });
+    }
   }
 
   removeCurrentToken() {
@@ -88,13 +108,17 @@ class App extends Component {
     this.getUserAndPlaylist();
   }
 
+  handleSaveClick(userId, playlistId, data) {
+    return api.savePlaylist(this.getCurrentToken().value, userId, playlistId, data);
+  }
+
   handleLogoutClick() {
     this.removeCurrentToken();
     this.setState({ userLoggedIn: false });
   }
 
   render() {
-    const { userLoggedIn, user, playlists } = this.state;
+    const { userLoggedIn, showModal, userId, playlistId, canEdit, user, playlists } = this.state;
     return (
       <div className="App">
         <Header />
@@ -121,6 +145,17 @@ class App extends Component {
               >
                 Logout
               </button>
+              {showModal && (
+                <PlaylistEditInterface
+                  showModal={showModal}
+                  handleCloseModal={this.handleCloseModal}
+                  handleSaveClick={this.handleSaveClick}
+                  userId={userId}
+                  playlistId={playlistId}
+                  token={this.getCurrentToken().value}
+                  canEdit={canEdit}
+                />
+              )}
               {(playlists && user) ?
                 <PlaylistListInterface
                   user={user}
