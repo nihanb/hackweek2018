@@ -18,7 +18,7 @@ description: hackweek 2018 project
 system: abuck-spotty-world
 
 # Main owner of this component (LDAP group or individual):
-owner: abuck
+owner: nihanb
 
 # Intended usage of this component:
 #   'private' - only for use by the owner

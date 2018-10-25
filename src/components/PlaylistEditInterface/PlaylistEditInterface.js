@@ -11,7 +11,6 @@ class PlaylistEditInterface extends Component {
     super(props);
     this.state = {
       contentLoading: true,
-      playlistImage: {images: []},
       canEdit: this.props.canEdit,
       propTypes: '',
     };
@@ -26,25 +25,20 @@ class PlaylistEditInterface extends Component {
   }
 
   componentDidMount() {
-    api.getPlaylistDetails(this.props.token, this.props.userId, this.props.playlistId).then((payload)=>{
-      const playlist = payload.data;
+      const playlist = this.props.playlist;
+      const index = this.props.index;
       this.setState({
         contentLoading: false,
         playlist,
-        playlistImage: playlist.images,
         playlistName: playlist.name,
-        playlistDescription: playlist.description,
+        trackComment: typeof(index) !== 'undefined' && playlist.tracks[index].comment ? playlist.tracks[index].comment : null,
       });
-    });
   }
 
   render() {
     const { contentLoading,
       playlist,
-      playlistImage,
-      playlistName,
-      playlistDescription,
-      notification,
+      trackComment,
       canEdit,
     } = this.state;
 
@@ -62,37 +56,12 @@ class PlaylistEditInterface extends Component {
                         Loading...
             </div> :
             <div className="contentloaded">
-              <div className="editorheader">Edit Playlist Details</div>
               <form className="editorbody" id="editorbody">
-                <div className="editname">
-                  <div className="label">Name</div>
-                  <div className="editField">
-                    <input className="input name-input" name="name" value={playlistName} onChange={(event) => this.setState({playlistName: event.target.value})}/>
-                  </div>
-                </div>
                 <div className="editimageanddescription">
-                  <div className="editimagecontainer">
-                    <div className="label imageinput">Image</div>
-                    <div className="editimage">
-                      {playlistImage.length ?
-                        <img src={playlistImage[0].url} className="playlistimage" alt="PlaylistCover" /> :
-                        <div className="uploadpicture glyphicon glyphicon-music" />
-                      }
-
-                    </div>
-                  </div>
                   <div className="editdescription">
-                    <div className="label">Description</div>
-                    <textarea className="descriptiontextarea" name="description" value={playlistDescription ? playlistDescription : ''} onChange={(event) => this.setState({playlistDescription: event.target.value})} />
+                    <div className="label">Comment</div>
+                    <textarea className="descriptiontextarea" name="description" value={trackComment ? trackComment : ''} onChange={(event) => this.setState({trackComment: event.target.value})} />
                   </div>
-                </div>
-                <div className="editnotification">
-                  {notification ?
-                    <div className="editnotificationontent">
-                      <i className="glyphicon glyphicon-alert"/>
-                      {notification}
-                    </div> : null
-                  }
                 </div>
                 <div className="editconfirm">
                   {canEdit ?
@@ -101,17 +70,10 @@ class PlaylistEditInterface extends Component {
                       <button className="btn btn-primary btn-xs btnsave" onClick={(event)=>{
                         event.preventDefault();
                         this.props.handleSaveClick(
-                          playlist.owner.id,
+                          this.props.index,
                           playlist.id,
-                          {
-                            'name': playlistName,
-                            'description': playlistDescription,
-                          }).then(
-                          this.setState({notification: 'Modification' +
-                                                    ' saved with success!'})
-
-
-                        );
+                          trackComment);
+                          this.props.handleCloseModal();
                       }}>Save</button>
                     </div> :
                     <button className="btn btn-default btn-xs btncancel" onClick={this.props.handleCloseModal}>Close</button>
@@ -130,7 +92,7 @@ PlaylistEditInterface.propTypes = {
   canEdit: PropTypes.bool,
   token: PropTypes.string,
   userId: PropTypes.string,
-  playlistId: PropTypes.string,
+  index: PropTypes.int,
   showModal: PropTypes.bool,
   handleCloseModal: PropTypes.func,
   handleSaveClick: PropTypes.func,

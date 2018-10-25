@@ -69,6 +69,7 @@ class App extends Component {
     this.handleSaveClick = this.handleSaveClick.bind(this);
     this.handlePlayerDeviceId = this.handlePlayerDeviceId.bind(this);
     this.handlePlayerStateChange = this.handlePlayerStateChange.bind(this);
+    this.handlePlayClick = this.handlePlayClick.bind(this);
   }
 
   componentDidMount() {
@@ -98,26 +99,44 @@ class App extends Component {
         const user = payload.data;
         this.setState({user});
       });
-      api.getPlaylists(token.value).then((payload) => {
-        const playlists = payload.data.items;
+
+      var playlists = JSON.parse(localStorage.getItem('playlists'));
+      if (playlists) {
         this.setState({playlists});
-      });
+      } else {
+        api.getPlaylists(token.value).then((payload) => {
+          const playlists = payload.data.items;
+          this.setState({playlists});
+          playlists.map((playlist) => {
+            api.getPlaylistTracks(token.value, playlist.id).then((payload)=>{
+              const tracks = payload.data;
+              let current = this.state.playlists.filter(pl => pl.id === playlist.id)[0];
+              current.tracks = tracks.items;
+              this.setState({...playlists, current});
+              localStorage.setItem('playlists', JSON.stringify(this.state.playlists));
+            })
+          })
+        });
+      }
     }
   }
 
   handlePlayerDeviceId(deviceId) {
     this.setState({deviceId: deviceId});
-    api.play(deviceId, this.getCurrentToken().value);
+  }
+
+  handlePlayClick(trackUri) {
+    api.play(this.state.deviceId, this.getCurrentToken().value, trackUri);
   }
 
   removeCurrentToken() {
     sessionStorage.removeItem('tokenobject');
   }
 
-  handleEditClick(userId, playlistId, canEdit) {
+  handleEditClick(trackIndex, playlistId, canEdit) {
     this.setState({
       showModal: true,
-      userId: userId,
+      trackIndex: trackIndex,
       playlistId: playlistId,
       canEdit: canEdit,
     });
@@ -125,11 +144,13 @@ class App extends Component {
 
   handleCloseModal() {
     this.setState({ showModal: false });
-    this.getUserAndPlaylist();
   }
 
-  handleSaveClick(userId, playlistId, data) {
-    return api.savePlaylist(this.getCurrentToken().value, userId, playlistId, data);
+  handleSaveClick(trackIndex, playlistId, data) {
+    let current = this.state.playlists.filter(pl => pl.id === playlistId)[0];
+    current.tracks[trackIndex].comment = data;
+    this.setState({...this.state.playlists, current});
+    localStorage.setItem('playlists', JSON.stringify(this.state.playlists));
   }
 
   handleLogoutClick() {
@@ -142,7 +163,7 @@ class App extends Component {
   }
 
   render() {
-    const { userLoggedIn, showModal, userId, playlistId, canEdit, user, playlists } = this.state;
+    const { trackIndex, userLoggedIn, showModal, userId, playlistId, canEdit, user, playlists } = this.state;
     return (
       <div className="App">
         <Header />
@@ -180,7 +201,8 @@ class App extends Component {
                   handleCloseModal={this.handleCloseModal}
                   handleSaveClick={this.handleSaveClick}
                   userId={userId}
-                  playlistId={playlistId}
+                  index={trackIndex}
+                  playlist={playlists.filter(pl => pl.id === playlistId)[0]}
                   token={this.getCurrentToken().value}
                   canEdit={canEdit}
                 />
@@ -190,6 +212,7 @@ class App extends Component {
                   user={user}
                   playlists={playlists}
                   handleEditClick={this.handleEditClick}
+                  handlePlayClick={this.handlePlayClick}
                 />
                 :
                 <div className="loadingplaylist">Loading playlists...</div>

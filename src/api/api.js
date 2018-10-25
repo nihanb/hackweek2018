@@ -22,26 +22,24 @@ export function getPlaylists(token) {
     });
 }
 
-export function getPlaylistDetails(token, userId, playlistId) {
-  return axios.get(
-    `https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}`,
-    {
+export function getPlaylistTracks(token, playlistId) {
+  return axios
+    .get(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-    }
-  );
+    });
 }
 
-export function play(deviceId, token) {
+export function play(deviceId, token, uri) {
   console.log(`playing...${deviceId}...${token}`);
   return axios
     .request({
       url: `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
       method: 'put',
-      data: '{"uris": ["spotify:track:5ya2gsaIhTkAuWYEMB0nw5"]}',
+      data: `{"uris": ["${uri}"]}`,
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
