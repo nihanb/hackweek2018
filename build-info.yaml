@@ -4,7 +4,7 @@ template:
   type: webYarn
   webYarn:
     deployment: tugboat
-    gcpProject: abuck-spotty-world
+    gcpProject: mixtapes
 
 notifications:
   slack:

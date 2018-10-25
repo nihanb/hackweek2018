@@ -9,13 +9,13 @@
 #     (also, x means "x", but no means false, because reasons.)
 
 # Unique ID for this component (in System-Z):
-id: abuck-spotty-world
+id: mixtapes
 
 # Brief description of this component:
 description: hackweek 2018 project
 
 # The system this component belongs to:
-system: abuck-spotty-world
+system: mixtapes
 
 # Main owner of this component (LDAP group or individual):
 owner: nihanb
@@ -51,10 +51,10 @@ facts:
   # on production machines. Must be valid service_discovery names
   # registered in the Nameless service.
   service_discovery:
-    - abuck-spotty-world
+    - mixtapes
 
   # The Puppet role of this component in a production environment:
-  role: abuckspottyworld  # IMPORTANT! Needed for provisioning!
+  role: mixtapes  # IMPORTANT! Needed for provisioning!
 
   # Lifecycle is a new experimental feature
   # we prefer one of: experimental, production,deprecated, removed

@@ -1,6 +1,6 @@
-# abuck-spotty-world
+# Mixtapes
 
-Maintainer: abuck <abuck@spotify.com>
+Maintainer: nihanb <nihanb@spotify.com>
 
 ## Description
 
